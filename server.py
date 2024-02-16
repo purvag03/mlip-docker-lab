@@ -1,10 +1,11 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 import numpy as np
 import joblib
 
 app = Flask(__name__)
 
-from flask import request
+# Load the model
+model = joblib.load('iris_model.pkl')
 
 @app.route('/predict', methods=['GET'])
 def predict():
@@ -12,15 +13,14 @@ def predict():
     get_json = request.get_json()
     iris_input = get_json['input']
     
-    # TODO: Import trained model
-    model = ...
+    # Convert input to 2D array
+    iris_input_array = np.array(iris_input).reshape(1, -1)
     
-    # TODO: Make prediction using the model 
-    # HINT: use np.array().reshape(1, -1) to convert input to 2D array
-    prediction = ...
+    # Make prediction using the model
+    prediction = model.predict(iris_input_array)
     
-    # TODO: Return the prediction as a response
-    return ...
+    # Return the prediction as a response
+    return jsonify({'prediction': prediction.tolist()})
 
 @app.route('/')
 def hello():

@@ -2,13 +2,20 @@
 
 FROM python:3.9-slim
 
-# TODO [1]: Set WORKDIR to /app
+# Set the working directory in the container
+WORKDIR /app
 
-# TODO [2.1]: Copy the requirements.txt file to the WORKDIR
+# Copy the dependencies file to the working directory
+COPY requirements.txt .
 
-# TODO [2.2]: Install the requirements
+# Install any dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# TODO [3]: Copy the server to the WORKDIR
+# Copy the content of the local src directory to the working directory
+COPY . .
 
-# TODO [4]: Set the command to run the app
-CMD [...]
+# Make sure to copy the ML model file into the container
+COPY iris_model.pkl .
+
+# Command to run the app 
+CMD ["python", "server.py"]
